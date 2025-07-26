@@ -29,7 +29,6 @@ export const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    // Initialize theme
     const storedTheme = localStorage.getItem("theme");
     if (storedTheme === "dark") {
       setIsDarkMode(true);
@@ -54,9 +53,14 @@ export const Navbar = () => {
     <>
       <nav
         className={cn(
-          "fixed w-full z-50 transition-all duration-300",
-          isScrolled ? "py-3 bg-background/80 backdrop-blur-md shadow-xs" : "py-5"
+          "fixed w-full transition-all duration-300",
+          isScrolled ? "py-3 bg-background/80 backdrop-blur-md shadow-xs" : "py-5",
+          isMenuOpen ? "z-50" : "z-50"
         )}
+        style={{
+          opacity: isMenuOpen ? 0 : 1,
+          pointerEvents: isMenuOpen ? 'none' : 'auto'
+        }}
       >
         <div className="container flex items-center justify-between">
           <a
@@ -69,7 +73,6 @@ export const Navbar = () => {
             </span>
           </a>
 
-          {/* desktop nav */}
           <div className="hidden md:flex items-center space-x-6">
             <div className="flex space-x-8">
               {navItems.map((item, key) => (
@@ -85,31 +88,41 @@ export const Navbar = () => {
             <LanguageSelector />
           </div>
 
-          {/* mobile nav */}
           <div className="md:hidden flex items-center space-x-3">
             <LanguageSelector />
             <button
               onClick={() => setIsMenuOpen((prev) => !prev)}
-              className="p-2 text-foreground relative"
-              aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}
+              className="p-2 text-foreground relative z-50"
+              aria-label="Open Menu"
+              style={{
+                opacity: 1,
+                pointerEvents: 'auto'
+              }}
             >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              <Menu size={24} />
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Mobile menu overlay - moved outside nav container */}
       <div
         className={cn(
-          "fixed inset-0 bg-background z-40 flex flex-col items-center justify-center",
+          "fixed inset-0 bg-background/90 backdrop-blur-sm z-40 flex flex-col items-center justify-center",
           "transition-all duration-300 md:hidden",
           isMenuOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
         )}
       >
-        <div className="flex flex-col space-y-8 text-xl text-center">
+        <div className="flex flex-col space-y-8 text-xl text-center relative">
+          <button
+            onClick={() => setIsMenuOpen(false)}
+            className="absolute -top-22 left-1/2 transform -translate-x-1/2 p-2 text-foreground hover:text-primary transition-colors duration-300"
+            aria-label="Close Menu"
+          >
+            <X size={34} />
+          </button>
+
           {navItems.map((item, key) => (
             <a
               key={key}
