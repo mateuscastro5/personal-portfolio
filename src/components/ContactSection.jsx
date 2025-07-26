@@ -82,7 +82,7 @@ export const ContactSection = () => {
                     href="mailto:mateuscastro2011@gmail.com"
                     className="text-muted-foreground hover:text-primary transition-colors"
                   >
-                    mateuscastro20111@gmail.com
+                    mateuscastro2011@gmail.com
                   </a>
                 </div>
               </div>
