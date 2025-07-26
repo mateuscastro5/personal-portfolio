@@ -1,18 +1,23 @@
 import { cn } from "@/lib/utils";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
-
-const navItems = [
-  { name: "Home", href: "#hero" },
-  { name: "About", href: "#about" },
-  { name: "Skills", href: "#skills" },
-  { name: "Projects", href: "#projects" },
-  { name: "Contact", href: "#contact" },
-];
+import { useLanguage } from "../hooks/useLanguage";
+import { LanguageSelector } from "./LanguageSelector";
+import { ThemeToggle } from "./ThemeToggle";
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { t } = useLanguage();
+
+  const navItems = [
+    { name: t('nav.home'), href: "#hero" },
+    { name: t('nav.about'), href: "#about" },
+    { name: t('nav.skills'), href: "#skills" },
+    { name: t('nav.projects'), href: "#projects" },
+    { name: t('nav.contact'), href: "#contact" },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,94 +27,128 @@ export const Navbar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  return (
-    <nav
-      className={cn(
-        "fixed w-full z-40 transition-all duration-300",
-        isScrolled ? "py-3 bg-background/80 backdrop-blur-md shadow-xs" : "py-5"
-      )}
-    >
-      <div className="container flex items-center justify-between">
-        <a
-          className="text-xl font-bold text-primary flex items-center"
-          href="#hero"
-        >
-          <span className="relative z-10">
-            <span className="text-glow text-foreground"> MateusDev </span>{" "}
-            Portfolio
-          </span>
-        </a>
 
-        {/* desktop nav */}
-        <div className="hidden md:flex space-x-8">
+  useEffect(() => {
+    const storedTheme = localStorage.getItem("theme");
+    if (storedTheme === "dark") {
+      setIsDarkMode(true);
+      document.documentElement.classList.add("dark");
+    } else {
+      setIsDarkMode(false);
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    if (isDarkMode) {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+      setIsDarkMode(false);
+    } else {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+      setIsDarkMode(true);
+    }
+  };
+  return (
+    <>
+      <nav
+        className={cn(
+          "fixed w-full transition-all duration-300",
+          isScrolled ? "py-3 bg-background/80 backdrop-blur-md shadow-xs" : "py-5",
+          isMenuOpen ? "z-50" : "z-50"
+        )}
+        style={{
+          opacity: isMenuOpen ? 0 : 1,
+          pointerEvents: isMenuOpen ? 'none' : 'auto'
+        }}
+      >
+        <div className="container flex items-center justify-between">
+          <a
+            className="text-xl font-bold text-primary flex items-center"
+            href="#hero"
+          >
+            <span className="relative z-10">
+              <span className="text-glow text-foreground"> MateusDev </span>{" "}
+              Portfolio
+            </span>
+          </a>
+
+          <div className="hidden md:flex items-center space-x-6">
+            <div className="flex space-x-8">
+              {navItems.map((item, key) => (
+                <a
+                  key={key}
+                  href={item.href}
+                  className="text-foreground/80 hover:text-primary transition-colors duration-300"
+                >
+                  {item.name}
+                </a>
+              ))}
+            </div>
+            <LanguageSelector />
+          </div>
+
+          <div className="md:hidden flex items-center space-x-3">
+            <LanguageSelector />
+            <button
+              onClick={() => setIsMenuOpen((prev) => !prev)}
+              className="p-2 text-foreground relative z-50"
+              aria-label="Open Menu"
+              style={{
+                opacity: 1,
+                pointerEvents: 'auto'
+              }}
+            >
+              <Menu size={24} />
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <div
+        className={cn(
+          "fixed inset-0 bg-background/90 backdrop-blur-sm z-40 flex flex-col items-center justify-center",
+          "transition-all duration-300 md:hidden",
+          isMenuOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        )}
+      >
+        <div className="flex flex-col space-y-8 text-xl text-center relative">
+          <button
+            onClick={() => setIsMenuOpen(false)}
+            className="absolute -top-22 left-1/2 transform -translate-x-1/2 p-2 text-foreground hover:text-primary transition-colors duration-300"
+            aria-label="Close Menu"
+          >
+            <X size={34} />
+          </button>
+
           {navItems.map((item, key) => (
             <a
               key={key}
               href={item.href}
               className="text-foreground/80 hover:text-primary transition-colors duration-300"
+              onClick={() => setIsMenuOpen(false)}
             >
               {item.name}
             </a>
           ))}
-        </div>
-
-        {/* mobile nav */}
-        <button
-          onClick={() => setIsMenuOpen((prev) => !prev)}
-          className="md:hidden p-2 text-foreground z-[60] relative"
-          aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}
-        >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-
-        {/* Mobile menu overlay */}
-        <div
-          className={cn(
-            "fixed inset-0 bg-background/95 backdrop-blur-md z-50",
-            "transition-all duration-300 md:hidden",
-            "flex items-center justify-center min-h-screen",
-            isMenuOpen
-              ? "opacity-100 pointer-events-auto"
-              : "opacity-0 pointer-events-none"
-          )}
-        >
-          <div className="flex flex-col space-y-8 text-xl text-center w-full px-8 py-20">
-            {navItems.map((item, key) => (
-              <a
-                key={key}
-                href={item.href}
-                className="text-foreground/80 hover:text-primary transition-colors duration-300 py-3"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {item.name}
-              </a>
-            ))}
-            
-            {/* Theme toggle for mobile */}
-            <div className="pt-6 flex justify-center">
-              <button
-                onClick={() => {
-                  const isDark = document.documentElement.classList.contains('dark');
-                  if (isDark) {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('theme', 'light');
-                  } else {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('theme', 'dark');
-                  }
-                }}
-                className="p-3 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors duration-300"
-              >
-                {document.documentElement.classList.contains('dark') ? (
-                  <Sun className="h-6 w-6 text-yellow-300" />
-                ) : (
-                  <Moon className="h-6 w-6 text-blue-900" />
-                )}
-              </button>
-            </div>
+          
+          <div className="flex justify-center space-x-4 pt-4">
+            <LanguageSelector />
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full transition-colors duration-300 hover:bg-primary/10"
+            >
+              {isDarkMode ? (
+                <Sun className="h-6 w-6 text-yellow-300" />
+              ) : (
+                <Moon className="h-6 w-6 text-blue-900" />
+              )}
+            </button>
           </div>
         </div>
       </div>
-    </nav>
+    </>
   );
 };

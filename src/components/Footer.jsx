@@ -1,12 +1,13 @@
 import { ArrowUp } from "lucide-react";
+import { useLanguage } from "../hooks/useLanguage";
 
 export const Footer = () => {
+  const { t } = useLanguage();
+  
   return (
     <footer className="py-12 px-4 bg-card relative border-t border-border mt-12 pt-8 flex flex-wrap justify-between items-center">
-      {" "}
       <p className="text-sm text-muted-foreground">
-        {" "}
-        &copy; {new Date().getFullYear()} Mateus Fagundes. All rights reserved.
+        &copy; {new Date().getFullYear()} Mateus Fagundes. {t('footer.rights')}
       </p>
       <a
         href="#hero"

@@ -1,8 +1,11 @@
 import { X, Download, Code, Server } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "../hooks/useLanguage";
 
 // eslint-disable-next-line react/prop-types
 export const CVDownloadModal = ({ isOpen, onClose, onDownload }) => {
+  const { t } = useLanguage();
+  
   if (!isOpen) return null;
 
   const handleDownload = (type) => {
@@ -31,10 +34,10 @@ export const CVDownloadModal = ({ isOpen, onClose, onDownload }) => {
         {/* Title */}
         <div className="text-center mb-8">
           <h3 className="text-2xl font-semibold mb-2">
-            Download <span className="text-primary">CV</span>
+            {t('cvModal.title')}
           </h3>
           <p className="text-muted-foreground">
-            Choose the version of the CV you would like to download
+            {t('cvModal.subtitle')}
           </p>
         </div>
 
@@ -55,9 +58,9 @@ export const CVDownloadModal = ({ isOpen, onClose, onDownload }) => {
                 <Code className="h-6 w-6 text-primary" />
               </div>
               <div className="text-left flex-1">
-                <h4 className="font-semibold text-lg">Frontend Developer</h4>
+                <h4 className="font-semibold text-lg">{t('cvModal.frontend')}</h4>
                 <p className="text-muted-foreground text-sm">
-                  React, JavaScript, CSS, UI/UX
+                  {t('cvModal.frontendDesc')}
                 </p>
               </div>
               <Download className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -79,9 +82,9 @@ export const CVDownloadModal = ({ isOpen, onClose, onDownload }) => {
                 <Server className="h-6 w-6 text-primary" />
               </div>
               <div className="text-left flex-1">
-                <h4 className="font-semibold text-lg">Backend Developer</h4>
+                <h4 className="font-semibold text-lg">{t('cvModal.backend')}</h4>
                 <p className="text-muted-foreground text-sm">
-                  Node.js, Databases, APIs, Server-side
+                  {t('cvModal.backendDesc')}
                 </p>
               </div>
               <Download className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -92,7 +95,7 @@ export const CVDownloadModal = ({ isOpen, onClose, onDownload }) => {
         {/* Footer */}
         <div className="mt-6 text-center">
           <p className="text-xs text-muted-foreground">
-            Both CVs highlight different aspects of my experience and skills.
+            {t('cvModal.footer')}
           </p>
         </div>
       </div>
