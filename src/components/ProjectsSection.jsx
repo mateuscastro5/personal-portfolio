@@ -1,4 +1,5 @@
 import { ArrowRight, ExternalLink, Github } from "lucide-react";
+import { useLanguage } from "../hooks/useLanguage";
 
 const projects = [
   {
@@ -33,17 +34,18 @@ const projects = [
 ];
 
 export const ProjectsSection = () => {
+  const { t } = useLanguage();
+  
   return (
     <section id="projects" className="py-24 px-4 relative">
       <div className="container mx-auto max-w-5xl">
         <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
           {" "}
-          Featured <span className="text-primary"> Projects </span>
+          {t('projects.title')}
         </h2>
 
         <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-          Here are some of my recent projects showcasing my expertise in full-stack development. 
-          From CLI tools to desktop applications, each project demonstrates different aspects of modern software development.
+          {t('projects.subtitle')}
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -74,7 +76,7 @@ export const ProjectsSection = () => {
                       href={project.demoUrl}
                       target="_blank"
                       className="text-foreground/80 hover:text-primary transition-colors duration-300"
-                      title="View on NPM"
+                      title={t('projects.viewDemo')}
                     >
                       <ExternalLink size={20} />
                     </a>
@@ -83,7 +85,7 @@ export const ProjectsSection = () => {
                     href={project.githubUrl}
                     target="_blank"
                     className="text-foreground/80 hover:text-primary transition-colors duration-300"
-                    title="View Source Code"
+                    title={t('projects.viewSource')}
                   >
                     <Github size={20} />
                   </a>
@@ -99,7 +101,7 @@ export const ProjectsSection = () => {
             target="_blank"
             href="https://github.com/mateuscastro5"
           >
-            View More Projects <ArrowRight size={16} />
+            {t('projects.viewMore')} <ArrowRight size={16} />
           </a>
         </div>
       </div>
