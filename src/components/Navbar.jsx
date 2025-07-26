@@ -134,7 +134,6 @@ export const Navbar = () => {
             </a>
           ))}
           
-          {/* Theme Toggle and Language Selector for Mobile */}
           <div className="flex justify-center space-x-4 pt-4">
             <LanguageSelector />
             <button

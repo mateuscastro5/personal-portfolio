@@ -9,27 +9,51 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
 import { useLanguage } from "../hooks/useLanguage";
+import { useState, useEffect } from "react";
+import emailjs from '@emailjs/browser';
 
 export const ContactSection = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useLanguage();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
+  }, []);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const form = e.target;
     setIsSubmitting(true);
 
-    setTimeout(() => {
+    try {
+      const result = await emailjs.sendForm(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        form,
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      );
+
       toast({
         title: t('contact.success'),
         description: t('contact.successDescription'),
       });
+
+      form.reset();
+      
+    } catch (error) {
+      console.error('EmailJS error:', error);
+      toast({
+        title: "Error sending message",
+        description: `Failed to send message. Please, contact me directly.`,
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
+
   return (
     <section id="contact" className="py-24 px-4 relative bg-secondary/30">
       <div className="container mx-auto max-w-5xl">
@@ -55,10 +79,10 @@ export const ContactSection = () => {
                 <div>
                   <h4 className="font-medium">{t('contact.email')}</h4>
                   <a
-                    href="mailto:mateuscastro20111@gmail.com"
+                    href="mailto:mateuscastro2011@gmail.com"
                     className="text-muted-foreground hover:text-primary transition-colors"
                   >
-                    mateuscastro20111@gmail.com
+                    mateuscastro2011@gmail.com
                   </a>
                 </div>
               </div>
@@ -154,6 +178,7 @@ export const ContactSection = () => {
                   id="message"
                   name="message"
                   required
+                  rows={5}
                   className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary resize-none"
                   placeholder={t('contact.messagePlaceholder')}
                 />
